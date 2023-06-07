@@ -1,0 +1,39 @@
+CREATE DATABASE projeto_final;
+USE projeto_final;
+
+CREATE TABLE grao(
+	id int NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    nome varchar(30)
+);
+CREATE TABLE tipoGrao(
+	id int,
+    FOREIGN KEY(id) REFERENCES grao(id),
+    tipo varchar(30),
+    impureza boolean,
+    nivel_impur double,
+    data_coleta varchar(10),
+    densidade double
+);
+
+CREATE TABLE armazenamento(
+    id int NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    capMax double,
+    tipo varchar(30),
+    quantArmaz double,
+    altura double,
+    grao int,
+    FOREIGN KEY(grao) REFERENCES grao(id)
+);
+
+CREATE TABLE silo(
+	id int,
+    FOREIGN KEY(id) REFERENCES armazenamento(id),
+    diametro double
+);
+
+CREATE TABLE galpao(
+	id int,
+    FOREIGN KEY(id) REFERENCES armazenamento(id),
+    largura double,
+    comprimento double
+);
