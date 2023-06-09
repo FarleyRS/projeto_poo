@@ -3,7 +3,7 @@ package model;
 public class Grao {
 	private String nome, tipo;
 	private boolean impureza;
-	private double densidade, nivel_impureza;
+	private double massa, nivel_impureza;
 	private String data_coleta;
 	
 	
@@ -11,13 +11,13 @@ public class Grao {
 		// TODO Auto-generated constructor stub
 	}
 			
-	public Grao(String nome, String tipo, boolean impureza, double densidade, double nivel_impureza,
+	public Grao(String nome, String tipo, boolean impureza, double massa, double nivel_impureza,
 			String data_coleta) {
 		super();
 		this.nome = nome;
 		this.tipo = tipo;
 		this.impureza = impureza;
-		this.densidade = densidade;
+		this.massa = massa;
 		this.nivel_impureza = nivel_impureza;
 		this.data_coleta = data_coleta;
 	}
@@ -56,12 +56,12 @@ public class Grao {
 	}
 
 
-	public double getDensidade() {
-		return densidade;
+	public double getMassa() {
+		return massa;
 	}
 
-	public void setDensidade(double densidade) {
-		this.densidade = densidade;
+	public void setMassa(double massa) {
+		this.massa = massa;
 	}
 
 	public String getData_coleta() {

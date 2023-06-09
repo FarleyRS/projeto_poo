@@ -1,18 +1,16 @@
 package projeto_final;
 
-import dao.GraoDao;
-import factory.ConnectionFactory;
-import model.Grao;
+import dao.SiloDao;
+import model.Silo;
 
 public class Main {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		Grao g = new Grao("Feijao","carioca",false, 0.3, 0,"02/02/2022");
+		SiloDao sd = new SiloDao();
 		
-		GraoDao g2 = new GraoDao();
 		
-		g2.creat(g);
+		sd.delete(1);
 	}
 
 }
