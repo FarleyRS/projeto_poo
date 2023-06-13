@@ -38,12 +38,19 @@ public class Galpao extends Armazenamento{
 	}
 	
 	public double capMax() {
-		 
-		return 0;
+		
+		double volume = getAltura()*getComprimento()*getLargura();
+
+		if(getGraoArmazenado()!=null) {
+			double densidade = 1/getGraoArmazenado().getMassa();
+			return volume*densidade;
+		}else
+			return volume*700;
+
 	}
 
 	public void addGrao(double quant, Grao grao) {
-
+		
 	}
 
 	public void removerGrao(double quant) {
