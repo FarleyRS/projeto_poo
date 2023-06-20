@@ -19,7 +19,7 @@ public class GalpaoDao {
      *
      * @param galpao O objeto Galpao a ser criado.
      */
-    public void create(Galpao galpao) {
+    public boolean create(Galpao galpao) {
         try {
             Connection con = ConnectionFactory.createConnectionToMySQL();
             // execulta primeira inserção
@@ -45,9 +45,11 @@ public class GalpaoDao {
             pts.setDouble(3, galpao.getComprimento());
             pts.setDouble(2, galpao.getLargura());
             pts.executeUpdate();
-
+            
+            return true;
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
     }
 

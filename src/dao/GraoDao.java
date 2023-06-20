@@ -8,7 +8,9 @@ import java.util.ArrayList;
 import factory.ConnectionFactory;
 import model.Galpao;
 import model.Grao;
-
+/**
+ * Esta classe é responsável por realizar operações de acesso a dados relacionadas ao objeto Grao.
+ */
 public class GraoDao {
 
     /**

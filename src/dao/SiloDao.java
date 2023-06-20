@@ -7,7 +7,9 @@ import java.util.ArrayList;
 
 import factory.ConnectionFactory;
 import model.Silo;
-
+/**
+ * Esta classe é responsável por realizar operações de acesso a dados relacionadas ao objeto Silo.
+*/
 public class SiloDao {
 
     /**

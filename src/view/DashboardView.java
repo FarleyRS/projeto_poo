@@ -9,6 +9,7 @@ import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.LayoutStyle.ComponentPlacement;
 
 public class DashboardView {
 
@@ -16,10 +17,8 @@ public class DashboardView {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private JFrame frame;
-	private GerenciaPanel gp = new GerenciaPanel();
-	private VendaPanel vp = new VendaPanel();
-	
+	private JFrame frmAgrotech;
+
 
 	private JPanel toolbar = new JPanel();
 	private JButton btnGerenciar = new JButton();
@@ -27,8 +26,6 @@ public class DashboardView {
 	private JPanel panel = new JPanel();
 	
 	public DashboardView() {
-		panel.add("gerencia", gp);
-		panel.add("venda", vp);
 		initComponents();		
 		
 	}
@@ -42,33 +39,35 @@ public class DashboardView {
 		btnVender.setFocusable(false);
 		btnVender.setBorder(null);
 		btnVender.setBackground(new Color(0, 128, 128));
-		frame = new JFrame();
-		frame.getContentPane().setBackground(new Color(119, 136, 153));
-		frame.setBounds(100, 100, 820, 513);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setVisible(true);
+		frmAgrotech = new JFrame();
+		frmAgrotech.setTitle("AgroTech");
+		frmAgrotech.setResizable(false);
+		frmAgrotech.getContentPane().setBackground(new Color(119, 136, 153));
+		frmAgrotech.setBounds(100, 100, 880, 500);
+		frmAgrotech.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frmAgrotech.setVisible(true);
 		
 		toolbar.setBackground(new Color(0, 128, 128));
 		
 		
-		GroupLayout groupLayout = new GroupLayout(frame.getContentPane());
+		GroupLayout groupLayout = new GroupLayout(frmAgrotech.getContentPane());
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
-					.addGap(58)
-					.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING, false)
-						.addComponent(toolbar, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-						.addComponent(panel, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 689, Short.MAX_VALUE))
-					.addContainerGap(57, Short.MAX_VALUE))
+					.addContainerGap()
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addComponent(panel, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 784, Short.MAX_VALUE)
+						.addComponent(toolbar, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 784, Short.MAX_VALUE))
+					.addContainerGap())
 		);
 		groupLayout.setVerticalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
-					.addGap(31)
+					.addContainerGap()
 					.addComponent(toolbar, GroupLayout.PREFERRED_SIZE, 55, GroupLayout.PREFERRED_SIZE)
-					.addGap(18)
-					.addComponent(panel, GroupLayout.PREFERRED_SIZE, 316, GroupLayout.PREFERRED_SIZE)
-					.addContainerGap(54, Short.MAX_VALUE))
+					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addComponent(panel, GroupLayout.DEFAULT_SIZE, 386, Short.MAX_VALUE)
+					.addContainerGap())
 		);
 		panel.setLayout(new CardLayout(0, 0));
 		btnGerenciar.setFocusable(false);
@@ -100,7 +99,7 @@ public class DashboardView {
 					.addContainerGap(18, Short.MAX_VALUE))
 		);
 		toolbar.setLayout(gl_toolbar);
-		frame.getContentPane().setLayout(groupLayout);
+		frmAgrotech.getContentPane().setLayout(groupLayout);
 	}
 	
 
@@ -108,44 +107,14 @@ public class DashboardView {
 		return btnGerenciar;
 	}
 
-	public void setBtnGerenciamento(JButton btnGerenciar) {
-		this.btnGerenciar = btnGerenciar;
-	}
-
 	public JButton getBtnVender() {
 		return btnVender;
-	}
-
-	public void setBtnVender(JButton btnVender) {
-		this.btnVender = btnVender;
-	}
-
-	public void setBtnGerenciar(JButton btnGerenciar) {
-		this.btnGerenciar = btnGerenciar;
 	}
 
 	public JPanel getPanel() {
 		return panel;
 	}
-
-	public void setPanel(JPanel panel) {
-		this.panel = panel;
-	}
 	
-	public GerenciaPanel getGp() {
-		return gp;
-	}
-
-	public void setGp(GerenciaPanel gp) {
-		this.gp = gp;
-	}
-
-	public VendaPanel getVp() {
-		return vp;
-	}
-
-	public void setVp(VendaPanel vp) {
-		this.vp = vp;
-	}
+	
 	
 }

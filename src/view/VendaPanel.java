@@ -24,9 +24,9 @@ public class VendaPanel extends JPanel {
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
-					.addGap(316)
+					.addGap(300)
 					.addComponent(lblNewLabel)
-					.addContainerGap(317, Short.MAX_VALUE))
+					.addContainerGap(301, Short.MAX_VALUE))
 		);
 		groupLayout.setVerticalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
