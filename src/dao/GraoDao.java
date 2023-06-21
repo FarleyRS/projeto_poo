@@ -176,4 +176,22 @@ public class GraoDao {
             System.out.println("Erro " + e.getMessage());
         }
     }
+    
+    public Grao searchById(int id) {
+    	try {
+    		int i = id;
+            Connection con = ConnectionFactory.createConnectionToMySQL();
+            PreparedStatement pts = con.prepareStatement("SELECT * FROM `grao` WHERE id = ?");
+            pts.setInt(1, i);
+            ResultSet rs = pts.executeQuery();
+            Grao grao = new Grao();
+            if (rs.next()) {
+				grao.setId(rs.getInt("id"));
+				grao.setNome("nome");
+			}
+            return grao;
+		} catch (Exception e) {
+			return null;
+		}
+    }
 }

@@ -1,6 +1,8 @@
 package model;
 
 public class Grao {
+	
+	private int id;
 	private String nome, tipo;
 	private boolean impureza;
 	private double massa, nivel_impureza;
@@ -71,5 +73,15 @@ public class Grao {
 	public void setData_coleta(String data_coleta) {
 		this.data_coleta = data_coleta;
 	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+	
+	
 	
 }
