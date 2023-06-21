@@ -12,6 +12,7 @@ import javax.swing.JCheckBox;
 import javax.swing.SwingConstants;
 import javax.swing.JList;
 import javax.swing.JButton;
+import javax.swing.AbstractListModel;
 
 public class AddGraoGalpaoPanel extends JPanel {
 	private JTextField tfNomeGrao;
@@ -115,6 +116,7 @@ public class AddGraoGalpaoPanel extends JPanel {
 							.addComponent(tfImpureza, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
 					.addContainerGap())
 		);
+	
 		groupLayout.setVerticalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
@@ -160,4 +162,78 @@ public class AddGraoGalpaoPanel extends JPanel {
 		setLayout(groupLayout);
 
 	}
+
+	public JTextField getTfNomeGrao() {
+		return tfNomeGrao;
+	}
+
+	public void setTfNomeGrao(JTextField tfNomeGrao) {
+		this.tfNomeGrao = tfNomeGrao;
+	}
+
+	public JTextField getTfTipoGrao() {
+		return tfTipoGrao;
+	}
+
+	public void setTfTipoGrao(JTextField tfTipoGrao) {
+		this.tfTipoGrao = tfTipoGrao;
+	}
+
+	public JTextField getTfImpureza() {
+		return tfImpureza;
+	}
+
+	public void setTfImpureza(JTextField tfImpureza) {
+		this.tfImpureza = tfImpureza;
+	}
+
+	public JTextField getTfDatacoleta() {
+		return tfDatacoleta;
+	}
+
+	public void setTfDatacoleta(JTextField tfDatacoleta) {
+		this.tfDatacoleta = tfDatacoleta;
+	}
+
+	public JTextField getTfMassa() {
+		return tfMassa;
+	}
+
+	public void setTfMassa(JTextField tfMassa) {
+		this.tfMassa = tfMassa;
+	}
+
+	public JTextField getTfGalpao() {
+		return tfGalpao;
+	}
+
+	public void setTfGalpao(JTextField tfGalpao) {
+		this.tfGalpao = tfGalpao;
+	}
+
+	public JCheckBox getCkbxImpureza() {
+		return ckbxImpureza;
+	}
+
+	public void setCkbxImpureza(JCheckBox ckbxImpureza) {
+		this.ckbxImpureza = ckbxImpureza;
+	}
+
+	public JList getListGalpao() {
+		return listGalpao;
+	}
+
+	public void setListGalpao(JList listGalpao) {
+		this.listGalpao = listGalpao;
+	}
+
+	public JButton getBtnAddGrao() {
+		return btnAddGrao;
+	}
+
+	public void setBtnAddGrao(JButton btnAddGrao) {
+		this.btnAddGrao = btnAddGrao;
+	}
+	
+	
 }
