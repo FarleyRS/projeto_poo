@@ -43,8 +43,6 @@ public class GerenciaPanel extends JPanel {
 			ContainerPanel.add(d);
 		
 		}
-
-		
 	}
 
 	private void initComponents() {

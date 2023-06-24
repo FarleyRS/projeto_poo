@@ -37,3 +37,20 @@ CREATE TABLE galpao(
     largura double,
     comprimento double
 );
+
+CREATE TABLE clientes(
+	id int NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	nome varchar(30),
+	cpf varchar(15),
+	compras int
+);
+
+CREATE TABLE venda(
+	id int NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	id_cliente int,
+	id_grao int,
+	total double(10,2),
+	data varchar(20),
+	FOREIGN KEY(id_cliente) REFERENCES clientes(id),
+	FOREIGN KEY(id_grao) REFERENCES grao(id)
+);

@@ -64,7 +64,7 @@ public class GraoDao {
         try {
             Connection con = ConnectionFactory.createConnectionToMySQL();
             
-            PreparedStatement pts = con.prepareStatement("SELECT grao.nome, tipograo.tipo, tipograo.impureza, tipograo.nivel_impur, "
+            PreparedStatement pts = con.prepareStatement("SELECT grao.id, grao.nome, tipograo.tipo, tipograo.impureza, tipograo.nivel_impur, "
                     + "tipograo.data_coleta, tipograo.densidade FROM grao INNER JOIN tipograo ON grao.id = tipograo.id WHERE grao.id = ?;");
             pts.setInt(1, id);
             ResultSet rs = pts.executeQuery();
@@ -72,6 +72,7 @@ public class GraoDao {
             Grao g = null;
             
             while (rs.next()) {
+            	int idg =  rs.getInt("id");
                 String nome = rs.getString("nome");
                 String tipo = rs.getString("tipo");
                 boolean impureza = rs.getBoolean("impureza");
@@ -79,7 +80,7 @@ public class GraoDao {
                 String data_coleta = rs.getString("data_coleta");
                 double massa = rs.getDouble("densidade");
                 
-                g = new Grao(nome, tipo, impureza, massa, nivel_impur, data_coleta);
+                g = new Grao(idg, nome, tipo, impureza, massa, nivel_impur, data_coleta);
             }
             
             return g;
@@ -98,13 +99,14 @@ public class GraoDao {
         try {
             Connection con = ConnectionFactory.createConnectionToMySQL();
             
-            PreparedStatement pts = con.prepareStatement("SELECT grao.nome, tipograo.tipo, tipograo.impureza, tipograo.nivel_impur, "
+            PreparedStatement pts = con.prepareStatement("SELECT grao.id, grao.nome, tipograo.tipo, tipograo.impureza, tipograo.nivel_impur, "
                     + "tipograo.data_coleta, tipograo.densidade FROM grao INNER JOIN tipograo ON grao.id = tipograo.id;");
             
             ResultSet rs = pts.executeQuery();
             ArrayList<Grao> arg = new ArrayList<>();
             
             while (rs.next()) {
+            	int id = rs.getInt("id");
                 String nome = rs.getString("nome");
                 String tipo = rs.getString("tipo");
                 boolean impureza = rs.getBoolean("impureza");
@@ -112,7 +114,7 @@ public class GraoDao {
                 String data_coleta = rs.getString("data_coleta");
                 double massa = rs.getDouble("densidade");
                 Grao g = null;
-                g = new Grao(nome, tipo, impureza, massa, nivel_impur, data_coleta);
+                g = new Grao(id,nome, tipo, impureza, massa, nivel_impur, data_coleta);
                 
                 arg.add(g);
             }

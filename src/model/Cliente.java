@@ -18,6 +18,7 @@ public class Cliente {
 		this.cpf = cpf;
 		this.compras = compras;
 	}
+	
 
 	public int getId() {
 		return id;
@@ -53,7 +54,7 @@ public class Cliente {
 
 	@Override
 	public String toString() {
-		return "Cliente [id=" + id + ", nome=" + nome + ", cpf=" + cpf + ", compras=" + compras + "]";
+		return "Cliente: " + nome;
 	}
 
 }

@@ -4,15 +4,12 @@ package controller;
 import java.awt.CardLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-
-import javax.swing.JButton;
-import javax.swing.JComponent;
 
 import view.DashboardView;
 import view.GerenciaPanel;
 import view.VendaPanel;
 import view.galpao.GerenciaGalpaoView;
+import controller.CompraController;
 
 public class DashboardController {
 	
@@ -28,9 +25,9 @@ public class DashboardController {
 		gp = new GerenciaPanel();
 		vp = new VendaPanel();
 		this.dv = dv;
+		
 		dv.getPanel().add("gerenciamento", gp);
 		dv.getPanel().add("venda", vp);
-		
 		initControllerDashboard();
 	}
 	
@@ -54,8 +51,9 @@ public class DashboardController {
 	public void abrePanelVenda(){
 		CardLayout cl = (CardLayout) (dv.getPanel().getLayout());
 		cl.show(dv.getPanel(), "venda");
+		new CompraController(vp);
 	}
-	
+
 	public void abreGerenciamento() {
 		GalpaoController d = new GalpaoController(new GerenciaGalpaoView());
 	}

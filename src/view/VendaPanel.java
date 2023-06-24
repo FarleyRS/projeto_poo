@@ -1,151 +1,211 @@
 package view;
 
 import javax.swing.JPanel;
-import java.awt.Color;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JLabel;
-import javax.swing.JButton;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import javax.swing.LayoutStyle.ComponentPlacement;
+import java.awt.Font;
+import java.text.DateFormat;
+import java.util.Date;
+import java.util.List;
 
-import controller.ClienteController;
-import controller.CompraController;
+import javax.swing.JList;
+import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.text.DateFormatter;
+
 import dao.GraoDao;
 import model.Cliente;
-import model.Compra;
 import model.Grao;
 
+import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JFormattedTextField;
+import javax.swing.table.DefaultTableModel;
 
 public class VendaPanel extends JPanel {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-
+	private JTable tableGrao;
+	private JTextField tfQuantidadeGrao;
+	private JTextField tfValor;
+	private JList listCliente = new JList();
+	private JButton btnNovoCliente = new JButton("Cadastrar Novo Cliente");
+	private JButton btnEfetuarComprar = new JButton("Efetuar Compra");
+	private JFormattedTextField ftfData;
 	/**
 	 * Create the panel.
 	 */
 	public VendaPanel() {
-		setBackground(new Color(192, 192, 192));
 		
-		JButton btnNewCliente = new JButton("Adicionar cliente");
-		btnNewCliente.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				CadastroCliente cc = new CadastroCliente();
-				cc.setVisible(true);
-			}
-		});
+		JLabel lblNewLabel = new JLabel("Cliente");
+		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 15));
 		
-		JLabel lblNewLabel = new JLabel("CPF DO CLIENTE:");
 		
-		JFormattedTextField cpf = new JFormattedTextField();
 		
-		JLabel lblIdDoGro = new JLabel("ID DO GRÃO:");
+		JLabel lblNewLabel_1 = new JLabel("Grão");
+		lblNewLabel_1.setFont(new Font("Tahoma", Font.BOLD, 15));
 		
-		JFormattedTextField idgrao = new JFormattedTextField();
+		// Cria os cabeçalhos das colunas
+        String[] columnNames = {"Item", "Value"};
+
+        // Cria o modelo de dados para o JTable
+        DefaultTableModel model = new DefaultTableModel(columnNames, 0);
+
+        // Adiciona os dados ao modelo de dados
+        GraoDao gd = new GraoDao();
+        
+        List<Grao> graos = gd.readAll();
+        for (Grao grao : graos) {
+            Object[] row = {grao.getId(),grao.getNome()};
+            model.addRow(row);
+        }
 		
-		JLabel lblValorDaCompra = new JLabel("VALOR DA COMPRA:");
+		tableGrao = new JTable(model);
 		
-		JFormattedTextField valor = new JFormattedTextField();
 		
-		JLabel lblDataDaCompra = new JLabel("DATA DA COMPRA:");
 		
-		JFormattedTextField datacompra = new JFormattedTextField();
+		JLabel lblNewLabel_2 = new JLabel("Quantidade:");
 		
-		JButton btnComprar = new JButton("EFETUAR COMPRA");
-		btnComprar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				String cpfcliente = cpf.getText();
-				int id = Integer.parseInt(idgrao.getText());
-				String data = datacompra.getText();
-				double total = Double.parseDouble(valor.getText());
-				Cliente cliente = new ClienteController().searchByCpf(cpfcliente);
-				//muda o searchbyid para o readbyid
-				Grao grao = new GraoDao().searchById(id);
-				Compra compra = new Compra();
-				compra.setCliente(cliente);
-				compra.setGrao(grao);
-				compra.setTotal(total);
-				compra.setData(data);
-				CompraController compraController = new CompraController();
-				compraController.cadastrar(compra);
-			}
-		});
+		tfQuantidadeGrao = new JTextField();
+		tfQuantidadeGrao.setColumns(10);
+			
+		tfValor = new JTextField();
+		tfValor.setEditable(false);
+		tfValor.setColumns(10);
+		
+		JLabel lblNewLabel_3 = new JLabel("Valor:");
+		
+		JLabel lblNewLabel_4 = new JLabel("Data:");
+		
+		DateFormat format = DateFormat.getDateInstance(DateFormat.SHORT);
+		DateFormatter formatter = new DateFormatter(format);
+
+		// Cria o JFormattedTextField e define o formato
+		ftfData = new JFormattedTextField();
+		ftfData.setEditable(false);
+		ftfData.setValue(new Date());
 		
 		
 		GroupLayout groupLayout = new GroupLayout(this);
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
-					.addGap(37)
+					.addGap(32)
+					.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING, false)
+						.addComponent(btnNovoCliente, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+						.addComponent(lblNewLabel, Alignment.LEADING, GroupLayout.PREFERRED_SIZE, 79, GroupLayout.PREFERRED_SIZE)
+						.addComponent(listCliente, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 165, Short.MAX_VALUE))
+					.addGap(30)
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-							.addGroup(groupLayout.createSequentialGroup()
-								.addComponent(lblDataDaCompra, GroupLayout.PREFERRED_SIZE, 146, GroupLayout.PREFERRED_SIZE)
-								.addContainerGap())
-							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-								.addGroup(groupLayout.createSequentialGroup()
-									.addComponent(idgrao, GroupLayout.PREFERRED_SIZE, 192, GroupLayout.PREFERRED_SIZE)
-									.addContainerGap())
-								.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-									.addGroup(groupLayout.createSequentialGroup()
-										.addComponent(lblIdDoGro, GroupLayout.PREFERRED_SIZE, 85, GroupLayout.PREFERRED_SIZE)
-										.addContainerGap())
-									.addGroup(groupLayout.createSequentialGroup()
-										.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-											.addComponent(lblNewLabel)
-											.addComponent(cpf, GroupLayout.PREFERRED_SIZE, 192, GroupLayout.PREFERRED_SIZE))
-										.addPreferredGap(ComponentPlacement.RELATED, 370, Short.MAX_VALUE)
-										.addComponent(btnNewCliente)
-										.addGap(33)))
-								.addGroup(groupLayout.createSequentialGroup()
-									.addComponent(lblValorDaCompra, GroupLayout.PREFERRED_SIZE, 146, GroupLayout.PREFERRED_SIZE)
-									.addContainerGap())
-								.addGroup(groupLayout.createSequentialGroup()
-									.addComponent(valor, GroupLayout.PREFERRED_SIZE, 192, GroupLayout.PREFERRED_SIZE)
-									.addContainerGap())))
-						.addGroup(groupLayout.createSequentialGroup()
-							.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING, false)
-								.addComponent(btnComprar, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-								.addComponent(datacompra, GroupLayout.DEFAULT_SIZE, 192, Short.MAX_VALUE))
-							.addContainerGap())))
+						.addComponent(lblNewLabel_1)
+						.addComponent(tableGrao, GroupLayout.PREFERRED_SIZE, 165, GroupLayout.PREFERRED_SIZE))
+					.addGap(18)
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addComponent(lblNewLabel_2)
+						.addComponent(lblNewLabel_4)
+						.addComponent(lblNewLabel_3))
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING, false)
+						.addComponent(btnEfetuarComprar, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+						.addComponent(ftfData)
+						.addComponent(tfValor)
+						.addComponent(tfQuantidadeGrao))
+					.addContainerGap(70, Short.MAX_VALUE))
 		);
 		groupLayout.setVerticalGroup(
-			groupLayout.createParallelGroup(Alignment.LEADING)
+			groupLayout.createParallelGroup(Alignment.TRAILING)
 				.addGroup(groupLayout.createSequentialGroup()
-					.addGap(27)
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 						.addGroup(groupLayout.createSequentialGroup()
-							.addComponent(lblNewLabel)
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(cpf, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-						.addComponent(btnNewCliente))
+							.addGap(56)
+							.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
+								.addComponent(lblNewLabel_2)
+								.addComponent(tfQuantidadeGrao, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+							.addGap(28)
+							.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
+								.addComponent(lblNewLabel_4)
+								.addComponent(ftfData, GroupLayout.PREFERRED_SIZE, 19, GroupLayout.PREFERRED_SIZE))
+							.addGap(26)
+							.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
+								.addComponent(tfValor, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+								.addComponent(lblNewLabel_3)))
+						.addGroup(groupLayout.createSequentialGroup()
+							.addContainerGap(21, Short.MAX_VALUE)
+							.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
+								.addGroup(groupLayout.createSequentialGroup()
+									.addComponent(lblNewLabel)
+									.addPreferredGap(ComponentPlacement.RELATED)
+									.addComponent(listCliente, GroupLayout.PREFERRED_SIZE, 225, GroupLayout.PREFERRED_SIZE))
+								.addGroup(groupLayout.createSequentialGroup()
+									.addComponent(lblNewLabel_1)
+									.addPreferredGap(ComponentPlacement.RELATED)
+									.addComponent(tableGrao, GroupLayout.PREFERRED_SIZE, 225, GroupLayout.PREFERRED_SIZE)))))
 					.addGap(18)
-					.addComponent(lblIdDoGro)
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(idgrao, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-					.addGap(18)
-					.addComponent(lblValorDaCompra)
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(valor, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-					.addGap(18)
-					.addComponent(lblDataDaCompra)
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(datacompra, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-					.addGap(18)
-					.addComponent(btnComprar)
-					.addContainerGap(235, Short.MAX_VALUE))
+					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
+						.addComponent(btnNovoCliente)
+						.addComponent(btnEfetuarComprar))
+					.addGap(61))
 		);
 		setLayout(groupLayout);
 
 	}
-	
-	public JPanel getVendaPanel() {
-		return this;
+
+	public JTable getTableGrao() {
+		return tableGrao;
 	}
+
+	public void setTableGrao(JTable tableGrao) {
+		this.tableGrao = tableGrao;
+	}
+
+	public JTextField getTfQuantidadeGrao() {
+		return tfQuantidadeGrao;
+	}
+
+	public void setTfQuantidadeGrao(JTextField tfQuantidadeGrao) {
+		this.tfQuantidadeGrao = tfQuantidadeGrao;
+	}
+
+	public JTextField getTfValor() {
+		return tfValor;
+	}
+
+	public void setTfValor(JTextField tfValor) {
+		this.tfValor = tfValor;
+	}
+
+	public JList getListCliente() {
+		return listCliente;
+	}
+
+	public void setListCliente(JList listCliente) {
+		this.listCliente = listCliente;
+	}
+
+	public JButton getBtnNovoCliente() {
+		return btnNovoCliente;
+	}
+
+	public void setBtnNovoCliente(JButton btnNovoCliente) {
+		this.btnNovoCliente = btnNovoCliente;
+	}
+
+	public JButton getBtnEfetuarComprar() {
+		return btnEfetuarComprar;
+	}
+
+	public void setBtnEfetuarComprar(JButton btnEfetuarComprar) {
+		this.btnEfetuarComprar = btnEfetuarComprar;
+	}
+
+	public JFormattedTextField getFtfData() {
+		return ftfData;
+	}
+
+	public void setFtfData(JFormattedTextField ftfData) {
+		this.ftfData = ftfData;
+	}
+	
+	
 }

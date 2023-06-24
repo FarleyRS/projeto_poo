@@ -12,7 +12,17 @@ public class Grao {
 	public Grao() {
 		// TODO Auto-generated constructor stub
 	}
-			
+	public Grao(int id,String nome, String tipo, boolean impureza, double massa, double nivel_impureza,
+			String data_coleta) {
+		super();
+		this.id = id;
+		this.nome = nome;
+		this.tipo = tipo;
+		this.impureza = impureza;
+		this.massa = massa;
+		this.nivel_impureza = nivel_impureza;
+		this.data_coleta = data_coleta;
+	}	
 	public Grao(String nome, String tipo, boolean impureza, double massa, double nivel_impureza,
 			String data_coleta) {
 		super();

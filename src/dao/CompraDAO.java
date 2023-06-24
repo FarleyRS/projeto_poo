@@ -8,7 +8,7 @@ import model.Compra;
 
 public class CompraDAO {
 	
-	public boolean cadastrar(Compra compra) {
+	public boolean create(Compra compra) {
 		try {
 			Connection con = ConnectionFactory.createConnectionToMySQL();
 			// execulta primeira inserção
@@ -24,4 +24,6 @@ public class CompraDAO {
 			return false;
 		}
 	}
+	
+	
 }
