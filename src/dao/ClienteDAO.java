@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import factory.ConnectionFactory;
 import model.Cliente;
 
-public class ClienteDAO {
+public class ClienteDao {
 	
 	public boolean create(Cliente cliente) {
 		try {

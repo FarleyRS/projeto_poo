@@ -6,7 +6,7 @@ import java.sql.PreparedStatement;
 import factory.ConnectionFactory;
 import model.Compra;
 
-public class CompraDAO {
+public class VendaDao {
 	
 	public boolean create(Compra compra) {
 		try {

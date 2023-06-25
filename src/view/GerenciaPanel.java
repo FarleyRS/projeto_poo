@@ -1,22 +1,15 @@
 package view;
 
-import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Dimension;
+import java.awt.GridLayout;
 
-import javax.swing.BorderFactory;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
-import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
-import java.awt.FlowLayout;
-import java.awt.GridLayout;
-import javax.swing.JLabel;
 
 public class GerenciaPanel extends JPanel {
 

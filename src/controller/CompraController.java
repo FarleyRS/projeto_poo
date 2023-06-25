@@ -4,13 +4,12 @@ import java.util.List;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
-import javax.swing.event.AncestorEvent;
-import javax.swing.event.AncestorListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableModel;
 
-import dao.ClienteDAO;
-import dao.CompraDAO;
+import dao.ClienteDao;
+import dao.VendaDao;
 import dao.GraoDao;
 import model.Cliente;
 import model.Compra;
@@ -19,39 +18,34 @@ import view.CadastroClienteView;
 import view.VendaPanel;
 
 public class CompraController {
-
 	private VendaPanel vp;
 	private CadastroClienteView cc;
 	private int idGrao;
 	private int idCliente;
 	private String data;
 	private double valor;
-	private ClienteDAO c;
-	private CompraDAO compraDAO;
-	private GraoDao g;
+	private ClienteDao clienteDao;
+	private VendaDao vendaDao;
+	private GraoDao graoDao;
 
 	public CompraController(VendaPanel vp) {
-		// TODO Auto-generated constructor stub
 		this.vp = vp;
+		clienteDao = new ClienteDao();
+		vendaDao = new VendaDao();
+		graoDao = new GraoDao();
 		initCompraController();
 	}
 
 	public void initCompraController() {
-		c = new ClienteDAO();
-		compraDAO = new CompraDAO();
-		g = new GraoDao();
+		vp.getBtnEfetuarCompra().addActionListener(e -> efetuarCompra());
+		vp.getBtnNovoCliente().addActionListener(e -> adicionarCliente());
 
-		vp.getBtnEfetuarComprar().addActionListener(e -> efetuarCompra());
-		vp.getBtnNovoCliente().addActionListener(e -> AddCliente());
+		preencherListaClientes();
+		preencherListaGraos();
 
-		preencheListaCliente();
-		preenchetListaGrao();
-
-		// Adiciona um ActionListener ao JTable para exibir a linha selecionada
 		vp.getListCliente().addListSelectionListener(new ListSelectionListener() {
 			@Override
 			public void valueChanged(ListSelectionEvent e) {
-				// TODO Auto-generated method stub
 				if (!e.getValueIsAdjusting()) {
 					Cliente cliente = (Cliente) vp.getListCliente().getSelectedValue();
 					idCliente = cliente.getId();
@@ -62,33 +56,30 @@ public class CompraController {
 		vp.getTableGrao().getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 			@Override
 			public void valueChanged(ListSelectionEvent e) {
-				// TODO Auto-generated method stub
 				int selectedRow = vp.getTableGrao().getSelectedRow();
 				if (selectedRow != -1) {
-					Object value = vp.getTableGrao().getValueAt(selectedRow, 0);
-					idGrao = (int) value;
+					idGrao = (int) vp.getTableGrao().getValueAt(selectedRow, 0);
 				}
 			}
 		});
-
 	}
 
 	public void efetuarCompra() {
-		double total = Double.parseDouble(vp.getTfQuantidadeGrao().getText());
-		total = total * 1.34;
+		double quantidade = Double.parseDouble(vp.getTfQuantidadeGrao().getText());
+		double total = quantidade * 1.34;
 		data = vp.getFtfData().getText();
-		Cliente cliente = c.readById(idCliente);
-		Grao grao = g.readById(idGrao);
+		Cliente cliente = clienteDao.readById(idCliente);
+		Grao grao = graoDao.readById(idGrao);
 
-		if (compraDAO.create(new Compra(cliente, grao, total, data))) {
-			JOptionPane.showMessageDialog(null, "Efetuada com Sucesso!");
+		if (vendaDao.create(new Compra(cliente, grao, total, data))) {
+			JOptionPane.showMessageDialog(null, "Compra efetuada com sucesso!");
 			vp.getTfQuantidadeGrao().setText("");
 		} else {
-			JOptionPane.showMessageDialog(null, "Falha!");
+			JOptionPane.showMessageDialog(null, "Falha ao efetuar a compra!");
 		}
 	}
 
-	public void AddCliente() {
+	public void adicionarCliente() {
 		cc = new CadastroClienteView();
 		cc.getBtnNewButton().addActionListener(e -> {
 			Cliente cliente = new Cliente();
@@ -96,24 +87,20 @@ public class CompraController {
 			cliente.setNome(cc.getTfNomeCliente().getText());
 			cliente.setCpf(cc.getFormattedTextField().getText());
 
-			if (c.create(cliente)) {
-				JOptionPane.showMessageDialog(null, "Adicionado com sucesso!");
-				preencheListaCliente();
+			if (clienteDao.create(cliente)) {
+				JOptionPane.showMessageDialog(null, "Cliente adicionado com sucesso!");
+				preencherListaClientes();
 				cc.getTfNomeCliente().setText("");
 				cc.getFormattedTextField().setText("");
 				cc.getFrame().setVisible(false);
 			} else {
-				JOptionPane.showMessageDialog(null, "Falha!");
+				JOptionPane.showMessageDialog(null, "Falha ao adicionar cliente!");
 			}
-
 		});
-
 	}
 
-	public void preencheListaCliente() {
-		ClienteDAO cd = new ClienteDAO();
-
-		List<Cliente> clientes = cd.readAll();
+	public void preencherListaClientes() {
+		List<Cliente> clientes = clienteDao.readAll();
 
 		DefaultListModel<Cliente> model = new DefaultListModel<>();
 		for (Cliente cliente : clientes) {
@@ -122,16 +109,21 @@ public class CompraController {
 		vp.getListCliente().setModel(model);
 	}
 
-	public void preenchetListaGrao() {
-		GraoDao gd = new GraoDao();
+	public void preencherListaGraos() {
+		List<Grao> graos = graoDao.readAll();
 
-		List<Grao> graos = gd.readAll();
+		String[] columnNames = {"Item", "Value"};
 
-		DefaultListModel<Grao> model = new DefaultListModel<>();
-		for (Grao grao : graos) {
-			model.addElement(grao);
-		}
+        // Cria o modelo de dados para o JTable
+        DefaultTableModel model = new DefaultTableModel(columnNames, 0);
 
+        // Adiciona os dados ao modelo de dados
+        GraoDao gd = new GraoDao();
+        
+        for (Grao grao : graos) {
+            Object[] row = {grao.getId(),grao.getNome()};
+            model.addRow(row);
+        }
+		vp.getTableGrao().setModel(model);
 	}
-
 }
