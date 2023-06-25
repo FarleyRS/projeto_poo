@@ -7,12 +7,15 @@ import javax.swing.GroupLayout.Alignment;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.LayoutStyle.ComponentPlacement;
+
+import model.Galpao;
+
 import java.awt.Font;
 import javax.swing.JCheckBox;
-import javax.swing.SwingConstants;
 import javax.swing.JList;
 import javax.swing.JButton;
-import javax.swing.AbstractListModel;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class AddGraoGalpaoPanel extends JPanel {
 	private JTextField tfNomeGrao;
@@ -21,11 +24,9 @@ public class AddGraoGalpaoPanel extends JPanel {
 	private JTextField tfDatacoleta;
 	private JTextField tfMassa;
 	private JTextField tfGalpao;
-	JCheckBox ckbxImpureza = new JCheckBox("Impureza");
-
-	JList listGalpao = new JList();
-	
-	JButton btnAddGrao = new JButton("Adicionar");
+	private JCheckBox ckbxImpureza;
+	private JList<Galpao> listGalpao;
+	private JButton btnAddGrao;
 	private JTextField tfQuantidade;
 
 	/**
@@ -46,14 +47,14 @@ public class AddGraoGalpaoPanel extends JPanel {
 		tfTipoGrao = new JTextField();
 		tfTipoGrao.setColumns(10);
 		
-		
+		ckbxImpureza = new JCheckBox("Impureza");
 		ckbxImpureza.setFont(new Font("Tahoma", Font.BOLD, 12));
 		ckbxImpureza.setBackground(new Color(192, 192, 192));
 		
 		JLabel lblNewLabel = new JLabel("Grão");
 		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 12));
 		
-		JLabel lblNewLabel_1 = new JLabel("Nivel de impureza:");
+		JLabel lblNewLabel_1 = new JLabel("Nível de impureza:");
 		lblNewLabel_1.setFont(new Font("Tahoma", Font.BOLD, 12));
 		
 		tfImpureza = new JTextField();
@@ -71,7 +72,6 @@ public class AddGraoGalpaoPanel extends JPanel {
 		tfMassa = new JTextField();
 		tfMassa.setColumns(10);
 		
-		
 		tfGalpao = new JTextField();
 		tfGalpao.setEditable(false);
 		tfGalpao.setColumns(10);
@@ -84,108 +84,107 @@ public class AddGraoGalpaoPanel extends JPanel {
 		
 		tfQuantidade = new JTextField();
 		tfQuantidade.setColumns(10);
+		
+		btnAddGrao = new JButton("Adicionar");
+		
+		listGalpao = new JList<>();
+		
 		GroupLayout groupLayout = new GroupLayout(this);
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
-					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-							.addGroup(groupLayout.createSequentialGroup()
-								.addContainerGap()
-								.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-									.addGroup(groupLayout.createSequentialGroup()
-										.addComponent(lbNomeGrao)
-										.addPreferredGap(ComponentPlacement.RELATED)
-										.addComponent(tfNomeGrao, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-										.addPreferredGap(ComponentPlacement.RELATED)
-										.addComponent(lblNewLabel_2)
-										.addPreferredGap(ComponentPlacement.RELATED)
-										.addComponent(tfDatacoleta, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-									.addGroup(groupLayout.createSequentialGroup()
-										.addComponent(ckbxImpureza)
-										.addPreferredGap(ComponentPlacement.UNRELATED)
-										.addComponent(lblNewLabel_1)
-										.addPreferredGap(ComponentPlacement.RELATED)
-										.addComponent(tfImpureza, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-									.addGroup(groupLayout.createSequentialGroup()
-										.addComponent(lblTipo, GroupLayout.PREFERRED_SIZE, 38, GroupLayout.PREFERRED_SIZE)
-										.addGap(4)
-										.addComponent(tfTipoGrao, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-										.addPreferredGap(ComponentPlacement.RELATED)
-										.addComponent(lblNewLabel_3)
-										.addPreferredGap(ComponentPlacement.RELATED)
-										.addComponent(tfMassa, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-									.addGroup(groupLayout.createSequentialGroup()
-										.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-											.addComponent(tfGalpao, GroupLayout.PREFERRED_SIZE, 147, GroupLayout.PREFERRED_SIZE)
-											.addComponent(lblNewLabel_4)
-											.addGroup(groupLayout.createSequentialGroup()
-												.addComponent(lblNewLabel_5)
-												.addPreferredGap(ComponentPlacement.RELATED)
-												.addComponent(tfQuantidade, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
-										.addGap(18)
-										.addComponent(listGalpao, GroupLayout.PREFERRED_SIZE, 148, GroupLayout.PREFERRED_SIZE))))
-							.addGroup(groupLayout.createSequentialGroup()
-								.addGap(70)
-								.addComponent(btnAddGrao)))
+					.addContainerGap()
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING, false)
+						.addComponent(lblNewLabel)
 						.addGroup(groupLayout.createSequentialGroup()
-							.addGap(13)
-							.addComponent(lblNewLabel)))
-					.addContainerGap(255, Short.MAX_VALUE))
+							.addComponent(lblNewLabel_4)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(tfGalpao, GroupLayout.PREFERRED_SIZE, 147, GroupLayout.PREFERRED_SIZE))
+						.addGroup(groupLayout.createSequentialGroup()
+							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+								.addGroup(groupLayout.createSequentialGroup()
+									.addComponent(lblNewLabel_5)
+									.addPreferredGap(ComponentPlacement.RELATED)
+									.addComponent(tfQuantidade, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+								.addGroup(groupLayout.createSequentialGroup()
+									.addGap(41)
+									.addComponent(btnAddGrao)))
+							.addGap(10)
+							.addComponent(listGalpao, GroupLayout.PREFERRED_SIZE, 148, GroupLayout.PREFERRED_SIZE))
+						.addGroup(groupLayout.createSequentialGroup()
+							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING, false)
+								.addGroup(groupLayout.createSequentialGroup()
+									.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+										.addComponent(lbNomeGrao)
+										.addComponent(lblTipo, GroupLayout.PREFERRED_SIZE, 38, GroupLayout.PREFERRED_SIZE))
+									.addPreferredGap(ComponentPlacement.RELATED)
+									.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+										.addComponent(tfTipoGrao, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+										.addComponent(tfNomeGrao, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+									.addPreferredGap(ComponentPlacement.UNRELATED)
+									.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+										.addComponent(lblNewLabel_3)
+										.addComponent(lblNewLabel_2))
+									.addPreferredGap(ComponentPlacement.RELATED))
+								.addGroup(groupLayout.createSequentialGroup()
+									.addComponent(ckbxImpureza)
+									.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+									.addComponent(lblNewLabel_1)
+									.addGap(15)))
+							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+								.addComponent(tfImpureza, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+								.addComponent(tfDatacoleta, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+								.addComponent(tfMassa, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))))
+					.addGap(34))
 		);
 		groupLayout.setVerticalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
-					.addGap(15)
-					.addComponent(lblNewLabel)
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
-						.addComponent(lbNomeGrao)
-						.addComponent(tfNomeGrao, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-						.addComponent(lblNewLabel_2)
-						.addComponent(tfDatacoleta, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+					.addContainerGap()
+					.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
 						.addGroup(groupLayout.createSequentialGroup()
-							.addGap(2)
-							.addComponent(lblTipo, GroupLayout.PREFERRED_SIZE, 15, GroupLayout.PREFERRED_SIZE))
-						.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
-							.addComponent(tfTipoGrao, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-							.addComponent(lblNewLabel_3)
+							.addComponent(lblNewLabel)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+								.addGroup(groupLayout.createSequentialGroup()
+									.addComponent(lbNomeGrao)
+									.addPreferredGap(ComponentPlacement.RELATED)
+									.addComponent(lblTipo, GroupLayout.PREFERRED_SIZE, 15, GroupLayout.PREFERRED_SIZE))
+								.addGroup(groupLayout.createSequentialGroup()
+									.addComponent(tfNomeGrao, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+									.addPreferredGap(ComponentPlacement.RELATED)
+									.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
+										.addComponent(tfTipoGrao, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+										.addComponent(lblNewLabel_3)))))
+						.addGroup(groupLayout.createSequentialGroup()
+							.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
+								.addComponent(lblNewLabel_2)
+								.addComponent(tfDatacoleta, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+							.addPreferredGap(ComponentPlacement.RELATED)
 							.addComponent(tfMassa, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
-					.addGap(18)
+					.addPreferredGap(ComponentPlacement.UNRELATED)
 					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
 						.addComponent(ckbxImpureza)
-						.addComponent(lblNewLabel_1)
-						.addComponent(tfImpureza, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addComponent(tfImpureza, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(lblNewLabel_1))
+					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
+						.addComponent(lblNewLabel_4)
+						.addComponent(tfGalpao, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
+						.addComponent(listGalpao, GroupLayout.PREFERRED_SIZE, 139, GroupLayout.PREFERRED_SIZE)
 						.addGroup(groupLayout.createSequentialGroup()
-							.addPreferredGap(ComponentPlacement.UNRELATED)
-							.addComponent(lblNewLabel_4)
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(tfGalpao, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-							.addGap(30)
-							.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
+							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 								.addComponent(lblNewLabel_5)
 								.addComponent(tfQuantidade, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-							.addPreferredGap(ComponentPlacement.RELATED, 52, Short.MAX_VALUE)
-							.addComponent(btnAddGrao)
-							.addGap(30))
-						.addGroup(groupLayout.createSequentialGroup()
-							.addGap(18)
-							.addComponent(listGalpao, GroupLayout.DEFAULT_SIZE, 139, Short.MAX_VALUE)
-							.addContainerGap())))
+							.addGap(92)
+							.addComponent(btnAddGrao)))
+					.addContainerGap(92, Short.MAX_VALUE))
 		);
 		setLayout(groupLayout);
-
-	}
-	
-	public JTextField getTfQuantidade() {
-		return tfQuantidade;
-	}
-
-	public void setTfQuantidade(JTextField tfQuantidade) {
-		this.tfQuantidade = tfQuantidade;
+		
+		setLayout(groupLayout);
 	}
 
 	public JTextField getTfNomeGrao() {
@@ -244,11 +243,11 @@ public class AddGraoGalpaoPanel extends JPanel {
 		this.ckbxImpureza = ckbxImpureza;
 	}
 
-	public JList getListGalpao() {
+	public JList<Galpao> getListGalpao() {
 		return listGalpao;
 	}
 
-	public void setListGalpao(JList listGalpao) {
+	public void setListGalpao(JList<Galpao> listGalpao) {
 		this.listGalpao = listGalpao;
 	}
 
@@ -259,4 +258,14 @@ public class AddGraoGalpaoPanel extends JPanel {
 	public void setBtnAddGrao(JButton btnAddGrao) {
 		this.btnAddGrao = btnAddGrao;
 	}
+
+	public JTextField getTfQuantidade() {
+		return tfQuantidade;
+	}
+
+	public void setTfQuantidade(JTextField tfQuantidade) {
+		this.tfQuantidade = tfQuantidade;
+	}
+
+
 }

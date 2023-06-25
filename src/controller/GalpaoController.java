@@ -1,6 +1,7 @@
 package controller;
 
 import java.awt.CardLayout;
+import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.Connection;
@@ -22,163 +23,120 @@ import view.galpao.AddGalpaoPanel;
 import view.galpao.AddGraoGalpaoPanel;
 import view.galpao.GerenciaGalpaoView;
 
-/**
- * Controlador para gerenciar operações de galpão.
- */
 public class GalpaoController {
 
-    private GalpaoDao gd = new GalpaoDao();
-    private GerenciaGalpaoView g;
-    private AddGalpaoPanel ag;
-    private AddGraoGalpaoPanel agg;
-    private int idGalpao = 0;
-    private Galpao galpao;
+	private GalpaoDao galpaoDao;
+	private GerenciaGalpaoView gerenciaGalpaoView;
+	private AddGalpaoPanel addGalpaoPanel;
+	private AddGraoGalpaoPanel addGraoGalpaoPanel;
+	private Galpao selectedGalpao;
 
-    /**
-     * Construtor para inicializar o controlador com a visão de gerenciamento de galpão.
-     *
-     * @param g A visão de gerenciamento de galpão.
-     */
-    public GalpaoController(GerenciaGalpaoView g) {
-        this.g = g;
-        this.ag = new AddGalpaoPanel();
-        this.agg = new AddGraoGalpaoPanel();
+	public GalpaoController(GerenciaGalpaoView gerenciaGalpaoView) {
+		this.galpaoDao = new GalpaoDao();
+		this.gerenciaGalpaoView = gerenciaGalpaoView;
+		this.addGalpaoPanel = new AddGalpaoPanel();
+		this.addGraoGalpaoPanel = new AddGraoGalpaoPanel();
 
-        g.getContainerPanel().add("add", ag);
-        g.getContainerPanel().add("addGrao", agg);
+		gerenciaGalpaoView.getContainerPanel().add("add", addGalpaoPanel);
+		gerenciaGalpaoView.getContainerPanel().add("addGrao", addGraoGalpaoPanel);
 
-        initControleGalpao();
-    }
+		initControleGalpao();
+	}
 
-    /**
-     * Adiciona um novo galpão com as dimensões especificadas.
-     *
-     * @param altura A altura do galpão.
-     * @param largura A largura do galpão.
-     * @param comprimento O comprimento do galpão.
-     */
-    public void addGalpao(double altura, double largura, double comprimento) {
-        Galpao g = new Galpao(altura, largura, comprimento);
-        if (gd.create(g)) {
-            JOptionPane.showMessageDialog(null, "Adicionado com Sucesso!");
-        } else {
-            JOptionPane.showMessageDialog(null, "Falha!");
-        }
-    }
+	public void addGalpao(double altura, double largura, double comprimento) {
+		Galpao galpao = new Galpao(altura, largura, comprimento);
+		if (galpaoDao.create(galpao)) {
+			JOptionPane.showMessageDialog(null, "Adicionado com Sucesso!");
+		} else {
+			JOptionPane.showMessageDialog(null, "Falha!");
+		}
+	}
 
-    /**
-     * Inicializa o controle do galpão adicionando ouvintes de eventos aos botões da interface do usuário.
-     */
-    public void initControleGalpao() {
-        g.getBtnNewGalpao().addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseReleased(MouseEvent e) {
-                CardLayout cl = (CardLayout) (g.getContainerPanel().getLayout());
-                cl.show(g.getContainerPanel(), "add");
-            }
-        });
+	public void initControleGalpao() {
+		gerenciaGalpaoView.getBtnNewGalpao().addActionListener((ActionEvent e) -> {
+			CardLayout cardLayout = (CardLayout) (gerenciaGalpaoView.getContainerPanel().getLayout());
+			cardLayout.show(gerenciaGalpaoView.getContainerPanel(), "add");
+		});
 
-        ag.getBtnNewGalpao().addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseReleased(MouseEvent e) {
-                double altura = Double.parseDouble(ag.getTfAltura().getText());
-                double largura = Double.parseDouble(ag.getTfLargura().getText());
-                double comprimento = Double.parseDouble(ag.getTfComprimento().getText());
+		addGalpaoPanel.getBtnNewGalpao().addActionListener((ActionEvent e) -> {
+			double altura = Double.parseDouble(addGalpaoPanel.getTfAltura().getText());
+			double largura = Double.parseDouble(addGalpaoPanel.getTfLargura().getText());
+			double comprimento = Double.parseDouble(addGalpaoPanel.getTfComprimento().getText());
 
-                addGalpao(altura, largura, comprimento);
+			addGalpao(altura, largura, comprimento);
 
-                ag.getTfAltura().setText("");
-                ag.getTfComprimento().setText("");
-                ag.getTfLargura().setText("");
-            }
-        });
+			addGalpaoPanel.getTfAltura().setText("");
+			addGalpaoPanel.getTfComprimento().setText("");
+			addGalpaoPanel.getTfLargura().setText("");
+		});
 
-        g.getBtnAddGraos().addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseReleased(MouseEvent e) {
-                CardLayout cl = (CardLayout) (g.getContainerPanel().getLayout());
-                g.getContainerPanel().add("addGrao", agg);
-                cl.show(g.getContainerPanel(), "addGrao");
-                preencheListaGalpaos();
-            }
-        });
-        
-        agg.getListGalpao().addListSelectionListener(new ListSelectionListener() {
-            @Override
-            public void valueChanged(ListSelectionEvent e) {
-                if (!e.getValueIsAdjusting()) {
-                    Galpao selectedGalpao = (Galpao) agg.getListGalpao().getSelectedValue();
-                    if (selectedGalpao != null) {
-                        agg.getTfGalpao().setText(String.valueOf(selectedGalpao.getId()));
-                        galpao = selectedGalpao;
-                    }
-                }
-            }
-        });
-        
-        agg.getBtnAddGrao().addActionListener(e -> criarGrao(galpao));
-    }
+		gerenciaGalpaoView.getBtnAddGraos().addActionListener((ActionEvent e) -> {
+			CardLayout cardLayout = (CardLayout) (gerenciaGalpaoView.getContainerPanel().getLayout());
+			gerenciaGalpaoView.getContainerPanel().add("addGrao", addGraoGalpaoPanel);
+			cardLayout.show(gerenciaGalpaoView.getContainerPanel(), "addGrao");
+			preencheListaGalpaos();
+		});
 
-    /**
-     * Preenche a lista de galpoes na interface do usuário com os galpoes existentes no banco de dados.
-     */
-    public void preencheListaGalpaos() {
-        GalpaoDao galpaoDao = new GalpaoDao();
-        List<Galpao> galpoes = galpaoDao.readAll();
+		addGraoGalpaoPanel.getListGalpao().addListSelectionListener((ListSelectionEvent e) -> {
+			if (!e.getValueIsAdjusting()) {
+				selectedGalpao = addGraoGalpaoPanel.getListGalpao().getSelectedValue();
+				if (selectedGalpao != null) {
+					addGraoGalpaoPanel.getTfGalpao().setText(String.valueOf(selectedGalpao.getId()));
+				}
+			}
+		});
 
-        DefaultListModel<Galpao> model = new DefaultListModel<>();
-        for (Galpao galpao : galpoes) {
-            model.addElement(galpao);
-        }
+		addGraoGalpaoPanel.getBtnAddGrao().addActionListener((ActionEvent e) -> {
+			criarGrao(selectedGalpao);
+		});
+	}
 
-        agg.getListGalpao().setModel(model);
-    }
+	public void preencheListaGalpaos() {
+		List<Galpao> galpoes = galpaoDao.readAll();
 
-    /**
-     * Cria um novo grão e o adiciona ao galpão especificado.
-     *
-     * @param galpao O galpão ao qual o grão será adicionado.
-     */
-    public void criarGrao(Galpao galpao) {
-    	
-        String nome = agg.getTfNomeGrao().getText();
-        String tipo = agg.getTfTipoGrao().getText();
-        boolean impureza = agg.getCkbxImpureza().isSelected();
-        double nivelImpureza = Double.parseDouble(agg.getTfImpureza().getText());
-        String dataColeta = agg.getTfDatacoleta().getText();
-        double massa = Double.parseDouble(agg.getTfMassa().getText());
+		DefaultListModel<Galpao> model = new DefaultListModel<>();
+		for (Galpao galpao : galpoes) {
+			model.addElement(galpao);
+		}
 
-        Grao grao = new Grao(nome, tipo, impureza, massa, nivelImpureza, dataColeta);
-        GraoDao graoDao = new GraoDao();
-        graoDao.create(grao);
+		addGraoGalpaoPanel.getListGalpao().setModel(model);
+	}
 
-        try (Connection con = ConnectionFactory.createConnectionToMySQL()) {
-            PreparedStatement pts = con.prepareStatement("SELECT id FROM grao ORDER BY id DESC LIMIT 1;");
-            ResultSet rs = pts.executeQuery();
+	public void criarGrao(Galpao galpao) {
+		String nome = addGraoGalpaoPanel.getTfNomeGrao().getText();
+		String tipo = addGraoGalpaoPanel.getTfTipoGrao().getText();
+		boolean impureza = addGraoGalpaoPanel.getCkbxImpureza().isSelected();
+		double nivelImpureza = Double.parseDouble(addGraoGalpaoPanel.getTfImpureza().getText());
+		String dataColeta = addGraoGalpaoPanel.getTfDatacoleta().getText();
+		double massa = Double.parseDouble(addGraoGalpaoPanel.getTfMassa().getText());
 
-            int id = 0;
-            if (rs.next()) {
-                id = rs.getInt("id");
-            }
-            galpao.setGraoArmazenado(grao);
-            galpao.setCapArmazenada(Double.parseDouble(agg.getTfQuantidade().getText()));
-            GalpaoDao galpaoDao = new GalpaoDao();
-            galpaoDao.update(galpao, idGalpao, id);
-            
-            
-            agg.getTfNomeGrao().setText("");
-            agg.getTfTipoGrao().setText("");
-            agg.getCkbxImpureza().setSelected(false);
-            agg.getTfImpureza().setText("");
-            agg.getTfDatacoleta().setText("");
-            agg.getTfMassa().setText("");
-            agg.getTfGalpao().setText("");
-            
-            JOptionPane.showMessageDialog(null, "Adicionado com sucesso!");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        
-        
-    }
+		Grao grao = new Grao(nome, tipo, impureza, massa, nivelImpureza, dataColeta);
+		GraoDao graoDao = new GraoDao();
+		graoDao.create(grao);
+
+		try (Connection con = ConnectionFactory.createConnectionToMySQL()) {
+			PreparedStatement pts = con.prepareStatement("SELECT id FROM grao ORDER BY id DESC LIMIT 1;");
+			ResultSet rs = pts.executeQuery();
+
+			int id = 0;
+			if (rs.next()) {
+				id = rs.getInt("id");
+			}
+			galpao.setGraoArmazenado(grao);
+			galpao.setCapArmazenada(Double.parseDouble(addGraoGalpaoPanel.getTfQuantidade().getText()));
+			galpaoDao.update(galpao, galpao.getId(), id);
+
+			addGraoGalpaoPanel.getTfNomeGrao().setText("");
+			addGraoGalpaoPanel.getTfTipoGrao().setText("");
+			addGraoGalpaoPanel.getCkbxImpureza().setSelected(false);
+			addGraoGalpaoPanel.getTfImpureza().setText("");
+			addGraoGalpaoPanel.getTfDatacoleta().setText("");
+			addGraoGalpaoPanel.getTfMassa().setText("");
+			addGraoGalpaoPanel.getTfGalpao().setText("");
+
+			JOptionPane.showMessageDialog(null, "Adicionado com sucesso!");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 }

@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 import factory.ConnectionFactory;
 import model.Galpao;
+import model.Grao;
 import model.Silo;
 
 /**
@@ -63,20 +64,22 @@ public class GalpaoDao {
 	public Galpao readById(int id) {
 		try (Connection con = ConnectionFactory.createConnectionToMySQL()) {
 			// executa consulta
-			PreparedStatement pts = con.prepareStatement("SELECT armazenamento.capMax,armazenamento.quantArmaz,"
-					+ " armazenamento.altura, galpao.largura, galpao.comprimento FROM armazenamento "
-					+ "INNER JOIN galpao ON armazenamento.id = galpao.id WHERE armazenamento.id = ?;");
+			 PreparedStatement pts = con.prepareStatement("SELECT armazenamento.id, armazenamento.capMax, "
+		        		+ "armazenamento.quantArmaz,armazenamento.altura, armazenamento.grao , galpao.largura, galpao.comprimento "
+		        		+ "FROM armazenamento INNER JOIN galpao ON armazenamento.id = galpao.id WHERE armazenamento.id = ?;");
 
 			pts.setInt(1, id);
 			ResultSet rs = pts.executeQuery();
+			GraoDao gd = new GraoDao();
 			Galpao g = null;
 			if (rs.next()) {
 				double capMax = rs.getDouble("capMax");
 				double quantArmaz = rs.getDouble("quantArmaz");
 				double altura = rs.getDouble("altura");
+				Grao grao = gd.readById(rs.getInt("grao"));
 				double largura = rs.getDouble("largura");
 				double compriment = rs.getDouble("comprimento");
-				g = new Galpao(capMax, quantArmaz, null, null, altura, largura, compriment);
+				g = new Galpao(capMax, quantArmaz, null, grao, altura, largura, compriment);
 			}
 			return g;
 		} catch (Exception e) {
@@ -93,20 +96,23 @@ public class GalpaoDao {
 	public ArrayList<Galpao> readAll() {
 	    try (Connection con = ConnectionFactory.createConnectionToMySQL()) {
 	        // executa consulta
-	        PreparedStatement pts = con.prepareStatement("SELECT armazenamento.id, armazenamento.capMax, armazenamento.quantArmaz,"
-	                + "armazenamento.altura, galpao.largura, galpao.comprimento FROM armazenamento "
-	                + "INNER JOIN galpao ON armazenamento.id = galpao.id;");
+	        PreparedStatement pts = con.prepareStatement("SELECT armazenamento.id, armazenamento.capMax, "
+	        		+ "armazenamento.quantArmaz,armazenamento.altura, armazenamento.grao , galpao.largura, galpao.comprimento "
+	        		+ "FROM armazenamento INNER JOIN galpao ON armazenamento.id = galpao.id;");
 
 	        ResultSet rs = pts.executeQuery();
 	        ArrayList<Galpao> ars = new ArrayList<>();
+	        GraoDao gd = new GraoDao();
 	        while (rs.next()) {
 	            int id = rs.getInt("id");
 	            double capMax = rs.getDouble("capMax");
 	            double quantArmaz = rs.getDouble("quantArmaz");
 	            double altura = rs.getDouble("altura");
+	            Grao grao = gd.readById(rs.getInt("grao"));
 	            double largura = rs.getDouble("largura");
 	            double compriment = rs.getDouble("comprimento");
-	            Galpao g = new Galpao(id, capMax, quantArmaz, null, null, altura, largura, compriment);
+	            Galpao g = new Galpao(id, capMax, quantArmaz, null, grao, altura, largura, compriment);
+	            g.setTipo(g);
 	            ars.add(g);
 	        }
 	        return ars;
@@ -126,9 +132,12 @@ public class GalpaoDao {
 	 */
 	public void update(Galpao galpao, int id, int idGrao) {
 		try (Connection con = ConnectionFactory.createConnectionToMySQL()) {
-			// update armazenamento
-			String armazenamentoSql = "UPDATE armazenamento SET capMax = ?, quantArmaz = ?, altura = ?"
-					+ (idGrao != 0 ? ", grao = ?" : "") + " WHERE id = ?;";
+			// Update armazenamento
+			String armazenamentoSql = "UPDATE armazenamento SET capMax = ?, quantArmaz = ?, altura = ?";
+			if (idGrao != 0) {
+				armazenamentoSql += ", grao = ?";
+			}
+			armazenamentoSql += " WHERE id = ?;";
 			PreparedStatement pts = con.prepareStatement(armazenamentoSql);
 			pts.setDouble(1, galpao.getCapMax());
 			pts.setDouble(2, galpao.getCapArmazenada());
@@ -141,7 +150,7 @@ public class GalpaoDao {
 			}
 			pts.executeUpdate();
 
-			// update galpao
+			// Update galpao
 			String galpaoSql = "UPDATE galpao SET largura = ?, comprimento = ? WHERE id = ?;";
 			pts = con.prepareStatement(galpaoSql);
 			pts.setDouble(1, galpao.getLargura());
@@ -149,9 +158,10 @@ public class GalpaoDao {
 			pts.setInt(3, id);
 			pts.executeUpdate();
 		} catch (Exception e) {
-			System.out.println("Erro " + e.getMessage());
+			System.out.println("Erro: " + e.getMessage());
 		}
 	}
+
 
 	/**
 	 * Exclui um galpão do banco de dados.
